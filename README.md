@@ -3,7 +3,18 @@
 
 This repostory is for TEMPOS - a GUI for generating synthetic data, appying CTF, training detectron2 models, segmenting experimental images, post processing and exporting data locally with Datasette.
 
+The Video Segmentation directory contains two jupyter notebooks:
+* segment_video.ipynb segments a video using a mask-rcnn model, without tracking
+* deepsort_video.ipynb segments and tracks a ideo using mask-rcnn model for segmentation and deepSORT for tracking
+  
+All the paths to the video, model weights and yaml files need to be adjusted to your path.
+
+The ipynb_files directory contains the scripts for using our method without the GUI.
+
+### Start TEMPOS
 To run the GUI after setting up the environment:
+
+
 ``` python main_window.py ```
 
 * Create Data page: create your own synthetic data replicating your experimental setup. Don't forget to save each setting.
@@ -31,7 +42,7 @@ https://github.com/user-attachments/assets/88168ce8-2565-4458-96d3-7dab20db90f3
   
 https://github.com/user-attachments/assets/cf5a1dff-794a-4b98-865e-f22533eb6226
 
-### Setting up the environment
+# Setting up the environment
 
 Clone this repo:
 
