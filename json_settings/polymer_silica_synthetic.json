@@ -1,0 +1,281 @@
+{
+  "0": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":1024,
+    "grid": {
+      "type": "lacey carbon",
+      "path": null,
+      "stepSize": [
+        2048
+      ],
+      "windowSize": [
+        [
+          2048,
+          2048
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 4,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 150,
+    "particle_size_max": 200,
+    "generate_cluster": false,
+    "cluster_type": "random",
+    "num_rows_min": 2,
+    "num_rows_max": 7,
+    "num_cols_min": 2,
+    "num_cols_max": 7,
+    "num_width_min": 2,
+    "num_width_max": 7,
+    "cluster_random_num": 10,
+    "num_of_points": 10,
+    "max_overlap": 0.5,
+    "vertices_min": 50,
+    "vertices_max": 51,
+    "irregularity": 0.0,
+    "particle_weight": 1,
+    "particle_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.5,
+      "octaves": 15,
+      "gain": 0.5,
+      "lacunarity": 2.0
+    },
+    "particle_noise_weight": 0.5,
+    "gradient_weight": 3.0,
+    "illumination_type": "half particle (default)",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 23,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 0.5,
+    "brighten":false,
+    "brighten_rate":1.0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.2,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  },
+  "1": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":1024,
+    "grid": {
+      "type": "lacey carbon",
+      "path": null,
+      "stepSize": [
+        2048
+      ],
+      "windowSize": [
+        [
+          2048,
+          2048
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 9,
+    "initial_i_max": 11,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 300,
+    "particle_size_max": 500,
+    "generate_cluster": false,
+    "cluster_type": "random",
+    "num_rows_min": 2,
+    "num_rows_max": 7,
+    "num_cols_min": 2,
+    "num_cols_max": 7,
+    "num_width_min": 2,
+    "num_width_max": 7,
+    "cluster_random_num": 10,
+    "num_of_points": 3,
+    "max_overlap": 0.5,
+    "vertices_min": 50,
+    "vertices_max": 51,
+    "irregularity": 0.0,
+    "particle_weight": 0.9,
+    "particle_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.3,
+      "octaves": 15,
+      "gain": 0.5,
+      "lacunarity": 2.0
+    },
+    "particle_noise_weight": 0.3,
+    "gradient_weight": 3.0,
+    "illumination_type": "full particle",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 23,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 0.5,
+    "brighten":false,
+    "brighten_rate":1.0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.2,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  },
+  "2": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":1024,
+    "grid": {
+      "type": "lacey carbon",
+      "path": null,
+      "stepSize": [
+        2048
+      ],
+      "windowSize": [
+        [
+          2048,
+          2048
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "ellipse",
+    "initial_i_min": 7,
+    "initial_i_max": 13,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 300,
+    "particle_size_max": 1000,
+    "generate_cluster": false,
+    "cluster_type": "random",
+    "num_rows_min": 2,
+    "num_rows_max": 7,
+    "num_cols_min": 2,
+    "num_cols_max": 7,
+    "num_width_min": 2,
+    "num_width_max": 7,
+    "cluster_random_num": 10,
+    "num_of_points": 5,
+    "max_overlap": 0.1,
+    "vertices_min": 50,
+    "vertices_max": 51,
+    "irregularity": 0.0,
+    "particle_weight": 1,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.15,
+      "octaves": 15,
+      "gain": 0.5,
+      "lacunarity": 2.0
+    },
+    "particle_noise_weight": 0.5,
+    "gradient_weight": 3.0,
+    "illumination_type": "half particle (default)",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 23,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 0.5,
+    "brighten":false,
+    "brighten_rate":1.0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.2,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  },
+  "3": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":1024,
+    "grid": {
+      "type": "holey carbon",
+      "path": null,
+      "stepSize": [
+        2048
+      ],
+      "windowSize": [
+        [
+          2048,
+          2048
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "ellipse",
+    "initial_i_min": 5,
+    "initial_i_max": 7,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 200,
+    "particle_size_max": 300,
+    "generate_cluster": true,
+    "cluster_type": "random",
+    "num_rows_min": 2,
+    "num_rows_max": 7,
+    "num_cols_min": 2,
+    "num_cols_max": 7,
+    "num_width_min": 2,
+    "num_width_max": 7,
+    "cluster_random_num": 10,
+    "num_of_points": 20,
+    "max_overlap": 0.5,
+    "vertices_min": 50,
+    "vertices_max": 51,
+    "irregularity": 0.0,
+    "particle_weight": 1,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.15,
+      "octaves": 15,
+      "gain": 0.5,
+      "lacunarity": 2.0
+    },
+    "particle_noise_weight": 0.5,
+    "gradient_weight": 3.0,
+    "illumination_type": "half particle (default)",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 23,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 0.5,
+    "brighten":false,
+    "brighten_rate":1.0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.2,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  }}

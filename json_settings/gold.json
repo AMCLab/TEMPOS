@@ -1,0 +1,772 @@
+{
+  "0": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "ellipse",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 0.9,
+    "no_of_magnifications": 1,
+    "particle_size_min": 100,
+    "particle_size_max": 200,
+    "generate_cluster": true,
+    "cluster_type": "random",
+    "num_rows_min": 2,
+    "num_rows_max": 7,
+    "num_cols_min": 2,
+    "num_cols_max": 7,
+    "num_width_min": 2,
+    "num_width_max": 7,
+    "cluster_random_num": 100,
+    "num_of_points": 50,
+    "max_overlap": 0.5,
+    "vertices_min": 3,
+    "vertices_max": 6,
+    "irregularity": 0.2,
+    "particle_weight": 2.0,
+    "particle_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": true,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  },
+  "1": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "ellipse",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 0.9,
+    "no_of_magnifications": 1,
+    "particle_size_min": 100,
+    "particle_size_max": 150,
+    "generate_cluster": true,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 7,
+    "num_rows_max": 8,
+    "num_cols_min": 7,
+    "num_cols_max": 8,
+    "num_width_min": 50,
+    "num_width_max": 80,
+    "cluster_random_num": 99,
+    "num_of_points": 6,
+    "max_overlap": 0.5,
+    "vertices_min": 3,
+    "vertices_max": 6,
+    "irregularity": 0.2,
+    "particle_weight": 2.0,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": true,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 1.5,
+    "invert_image": false
+  },
+  "2": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "rod",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 150,
+    "particle_size_max": 200,
+    "generate_cluster": true,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 10,
+    "num_rows_max": 51,
+    "num_cols_min": 10,
+    "num_cols_max": 51,
+    "num_width_min": 5,
+    "num_width_max": 20,
+    "cluster_random_num": 99,
+    "num_of_points": 3,
+    "max_overlap": 0.2,
+    "vertices_min": 3,
+    "vertices_max": 6,
+    "irregularity": 0.2,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 1.0,
+    "invert_image": false
+  },
+  "3": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "rod",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 150,
+    "particle_size_max": 200,
+    "generate_cluster": true,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 50,
+    "num_rows_max": 51,
+    "num_cols_min": 50,
+    "num_cols_max": 51,
+    "num_width_min": 10,
+    "num_width_max": 11,
+    "cluster_random_num": 99,
+    "num_of_points": 1,
+    "max_overlap": 1.0,
+    "vertices_min": 3,
+    "vertices_max": 6,
+    "irregularity": 0.2,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 1.0,
+    "invert_image": false
+  },
+  "4": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 100,
+    "particle_size_max": 200,
+    "generate_cluster": true,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 50,
+    "num_rows_max": 51,
+    "num_cols_min": 50,
+    "num_cols_max": 51,
+    "num_width_min": 5,
+    "num_width_max": 6,
+    "cluster_random_num": 99,
+    "num_of_points": 1,
+    "max_overlap": 1.0,
+    "vertices_min": 3,
+    "vertices_max": 8,
+    "irregularity": 0.2,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "simplexfracta",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 1.0,
+    "invert_image": false
+  },
+  "5": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 200,
+    "particle_size_max": 500,
+    "generate_cluster": false,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 50,
+    "num_rows_max": 51,
+    "num_cols_min": 50,
+    "num_cols_max": 51,
+    "num_width_min": 5,
+    "num_width_max": 6,
+    "cluster_random_num": 99,
+    "num_of_points": 10,
+    "max_overlap": 0.5,
+    "vertices_min": 3,
+    "vertices_max": 8,
+    "irregularity": 0.2,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": true,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 1.0,
+    "invert_image": false
+  },
+  "6": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 200,
+    "particle_size_max": 500,
+    "generate_cluster": true,
+    "cluster_type": "random",
+    "num_rows_min": 50,
+    "num_rows_max": 51,
+    "num_cols_min": 50,
+    "num_cols_max": 51,
+    "num_width_min": 5,
+    "num_width_max": 6,
+    "cluster_random_num": 10,
+    "num_of_points": 10,
+    "max_overlap": 0.5,
+    "vertices_min": 3,
+    "vertices_max": 8,
+    "irregularity": 0.2,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": true,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 1.0,
+    "invert_image": false
+  },
+  "7": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 200,
+    "particle_size_max": 500,
+    "generate_cluster": true,
+    "cluster_type": "random",
+    "num_rows_min": 50,
+    "num_rows_max": 51,
+    "num_cols_min": 50,
+    "num_cols_max": 51,
+    "num_width_min": 5,
+    "num_width_max": 6,
+    "cluster_random_num": 10,
+    "num_of_points": 10,
+    "max_overlap": 0.5,
+    "vertices_min": 15,
+    "vertices_max": 30,
+    "irregularity": 0.5,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": true,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 1.0,
+    "invert_image": false
+  },
+  "8": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 400,
+    "particle_size_max": 500,
+    "generate_cluster": true,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 3,
+    "num_rows_max": 4,
+    "num_cols_min": 2,
+    "num_cols_max": 3,
+    "num_width_min": 5,
+    "num_width_max": 6,
+    "cluster_random_num": 3,
+    "num_of_points": 3,
+    "max_overlap": 0.7,
+    "vertices_min": 15,
+    "vertices_max": 30,
+    "irregularity": 0.5,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": true,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  },
+  "9": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 100,
+    "particle_size_max": 200,
+    "generate_cluster": true,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 50,
+    "num_rows_max": 60,
+    "num_cols_min": 50,
+    "num_cols_max": 60,
+    "num_width_min": 2,
+    "num_width_max": 3,
+    "cluster_random_num": 3,
+    "num_of_points": 1,
+    "max_overlap": 1.0,
+    "vertices_min": 8,
+    "vertices_max": 9,
+    "irregularity": 0.2,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": false,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  },
+  "10": {
+    "save": false,
+    "plot_mask": true,
+    "train_val_ratio": 0,
+    "img_size":2048,
+    "grid": {
+      "type": "continuous carbon",
+      "path": null,
+      "stepSize": [
+        1024
+      ],
+      "windowSize": [
+        [
+          1024,
+          1024
+        ]
+      ],
+      "Restrict2carbon": false,
+      "Restrict2Holes": false
+    },
+    "particle": "polygon",
+    "initial_i_min": 2,
+    "initial_i_max": 3,
+    "axes_ratio": 1.0,
+    "no_of_magnifications": 1,
+    "particle_size_min": 400,
+    "particle_size_max": 450,
+    "generate_cluster": true,
+    "cluster_type": "honeycomb",
+    "num_rows_min": 7,
+    "num_rows_max": 9,
+    "num_cols_min": 7,
+    "num_cols_max": 9,
+    "num_width_min": 170,
+    "num_width_max": 190,
+    "cluster_random_num": 3,
+    "num_of_points": 1,
+    "max_overlap": 1.0,
+    "vertices_min": 8,
+    "vertices_max": 9,
+    "irregularity": 0.1,
+    "particle_weight": 3.0,
+    "particle_noise": {
+      "type": "none",
+      "frequency": 0.01,
+      "octaves": 5,
+      "gain": 0.5,
+      "lacunarity": 10.0
+    },
+    "particle_noise_weight": 3.0,
+    "gradient_weight": 2.0,
+    "illumination_type": "no aberration",
+    "illumination_weight": 2.0,
+    "illumination_kernel": 21,
+    "illumination_sigmaX": 2,
+    "rescale_intensity": true,
+    "rescale_intensity_prob": 1.0,
+    "brighten":false,
+    "brighten_rate":0,
+    "class_name": "particle",
+    "image_noise": {
+      "type": "perlin",
+      "frequency": 0.1,
+      "octaves": 5,
+      "gain": 0.1,
+      "lacunarity": 1.0
+    },
+    "image_noise_weight": 2.0,
+    "invert_image": false
+  }
+}
