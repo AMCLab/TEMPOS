@@ -44,7 +44,7 @@ RUN python -m pip install --no-cache-dir \
 
 # Pull out the torch versions from requirements.txt (specific to CUDA 11.8) and install them
 RUN python -m pip install --no-cache-dir \
-    $(grep -E '^torch|^torchvision|^torchaudio' requirements.txt) \
+    $(grep -Ei 'torch|torchvision|torchaudio' requirements.txt) \
     --index-url https://download.pytorch.org/whl/cu118
 
 # Install Detectron2
