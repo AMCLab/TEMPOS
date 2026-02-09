@@ -29,8 +29,8 @@ jobs:
           dotnet: true
           haskell: true
           large-packages: true
-          docker-images: false # Keep this false so we don't kill our own build base
-          swap: true
+          docker-images: false 
+          swap-storage: true
 
       - name: Bump version and push tag
         id: tag_version
