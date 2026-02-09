@@ -61,13 +61,11 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          # Note: We use the 'tag' output which falls back to the latest 
-          # existing tag if a new one wasn't created.
           tags: |
-            ${{ steps.image.outputs.name }}:${{ steps.tag_version.outputs.tag }}
+            ${{ steps.image.outputs.name }}:${{ steps.tag_version.outputs.new_tag }}
             ${{ steps.image.outputs.name }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Show built tag
-        run: echo "Successfully pushed ${{ steps.image.outputs.name }}:${{ steps.tag_version.outputs.tag }}"
+        run: echo "Successfully pushed ${{ steps.image.outputs.name }}:${{ steps.tag_version.outputs.new_tag }}"
