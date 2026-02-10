@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
 ENV QT_X11_NO_MITSHM=1
+ENV XDG_RUNTIME_DIR=/tmp/runtime-appuser
 
 # System Libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -30,13 +31,13 @@ RUN python -m pip install --upgrade pip setuptools wheel
 # Set working directory
 WORKDIR /app
 
-# Create directory for exports and make it world-writable.
-RUN mkdir -p /app/exports && chmod 0777 /app/exports
+# Create non-root user
+RUN useradd -m -u 1000 appuser
 
 # Copy requirements
 COPY requirements.txt .
 
-# Install foundation dependencies (numpy, numba, cython, ninja)
+# Install foundation dependancies (numpy, numba, cython, ninja)
 RUN python -m pip install --no-cache-dir \
     $(grep -E '^numpy|^numba' requirements.txt) \
     cython ninja
@@ -49,14 +50,26 @@ RUN python -m pip install --no-cache-dir \
 # Install Detectron2
 RUN python -m pip install --no-cache-dir --no-build-isolation 'git+https://github.com/facebookresearch/detectron2.git'
 
-# Install remaining dependancies
+# Create the runtime directory
+RUN mkdir -p $XDG_RUNTIME_DIR && \
+    chmod 700 $XDG_RUNTIME_DIR && \
+    chown appuser:appuser $XDG_RUNTIME_DIR
+
+# Create folders for exports so they exist before mounting and ensure appuser owns them
+RUN mkdir -p /app/exports && \
+    chown -R appuser:appuser /app/exports
+
+# Install the rest of dependancies listed in requirements.txt 
 RUN python -m pip install --no-cache-dir --no-build-isolation -r requirements.txt
 
-# Copy source code
+# Copy source and set permissions
 COPY . /app
+RUN chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
 
 # Expose port for Uvicorn
 EXPOSE 8001
 
-# Run as default (you will override UID/GID at runtime)
 CMD ["python", "main_window.py"]
