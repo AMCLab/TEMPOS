@@ -23,8 +23,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr libtesseract-dev \
     libxrender-dev libx11-xcb-dev libxi-dev \
     libxkbcommon-x11-dev libglu1-mesa-dev \
-    libwayland-client0 libwayland-egl1 libwayland-cursor0 \
-    libxkbcommon0 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN ln -sf /usr/bin/python3.10 /usr/bin/python
