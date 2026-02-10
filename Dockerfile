@@ -7,7 +7,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
 ENV QT_X11_NO_MITSHM=1
-ENV XDG_RUNTIME_DIR=/tmp/runtime-appuser
 
 # System Libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -28,16 +27,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN ln -sf /usr/bin/python3.10 /usr/bin/python
 RUN python -m pip install --upgrade pip setuptools wheel
 
-# Setup Work directory and user
+# Set working directory
 WORKDIR /app
 
-# Create non-root user
-RUN useradd -m -u 1000 appuser
+# Create directory for exports and make it world-writable.
+RUN mkdir -p /app/exports && chmod 0777 /app/exports
 
-# Copy the requirements file
+# Copy requirements
 COPY requirements.txt .
 
-# Install foundation dependancies pulling versions from requirements.txt
+# Install foundation dependencies (numpy, numba, cython, ninja)
 RUN python -m pip install --no-cache-dir \
     $(grep -E '^numpy|^numba' requirements.txt) \
     cython ninja
@@ -50,26 +49,14 @@ RUN python -m pip install --no-cache-dir \
 # Install Detectron2
 RUN python -m pip install --no-cache-dir --no-build-isolation 'git+https://github.com/facebookresearch/detectron2.git'
 
-# Create the runtime directory
-RUN mkdir -p $XDG_RUNTIME_DIR && \
-    chmod 700 $XDG_RUNTIME_DIR && \
-    chown appuser:appuser $XDG_RUNTIME_DIR
-
-# Create folders for exports so they exist before mounting and ensure appuser owns them
-RUN mkdir -p /app/exports && \
-    chown -R appuser:appuser /app/exports
-
-# Install the rest of dependancies listed in requirements.txt 
+# Install remaining dependancies
 RUN python -m pip install --no-cache-dir --no-build-isolation -r requirements.txt
 
-# Copy source and set permissions
+# Copy source code
 COPY . /app
-RUN chown -R appuser:appuser /app
 
-# Switch to non-root user
-USER appuser
-
-# Expose the port Uvicorn uses
+# Expose port for Uvicorn
 EXPOSE 8001
 
+# Run as default (you will override UID/GID at runtime)
 CMD ["python", "main_window.py"]
