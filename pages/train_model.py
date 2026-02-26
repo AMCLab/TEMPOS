@@ -73,7 +73,7 @@ class TrainModel(QtWidgets.QWidget):
 
         self.doubleSpinBoxLR = 0.00025
 
-        self.comboBoxModelWeights = os.path.join(basedir, "detectron2Files", "model_final_2d9806.pkl")
+        #self.comboBoxModelWeights = os.path.join(basedir, "detectron2Files", "model_final_2d9806.pkl")
 
         self.spinBoxMaxIter = 1000
 
@@ -354,7 +354,7 @@ class TrainModel(QtWidgets.QWidget):
         try: 
 
             self.import_thread = TrainModelThread(self.labelTrainingLog, self.dataset_train_name, self.dataset_test_name, self.spinBoxImgSize, self.spinBoxNumOfClasses, self.comboBoxDevice,
-                                              self.spinBoxBatchSize, self.doubleSpinBoxLR, self.comboBoxModelWeights, self.spinBoxMaxIter, self.spinBoxROIBS)
+                                              self.spinBoxBatchSize, self.doubleSpinBoxLR, self.spinBoxMaxIter, self.spinBoxROIBS)
 
             self.text_edit_handler.log_signal.connect(self.update_log_label)
 
@@ -400,11 +400,11 @@ class TrainModel(QtWidgets.QWidget):
 
     def open_input_dialog(self):
 
-        dialog = InputDialog(self.spinBoxBatchSize, self.doubleSpinBoxLR, self.comboBoxModelWeights, self.spinBoxMaxIter, self.spinBoxROIBS)
+        dialog = InputDialog(self.spinBoxBatchSize, self.doubleSpinBoxLR, self.spinBoxMaxIter, self.spinBoxROIBS)
 
         if dialog.exec() == QtWidgets.QDialog.DialogCode.Accepted:
 
-            self.spinBoxBatchSize, self.doubleSpinBoxLR, self.comboBoxModelWeights, \
+            self.spinBoxBatchSize, self.doubleSpinBoxLR, \
                 self.spinBoxMaxIter, self.spinBoxROIBS = dialog.getValues()
             
             

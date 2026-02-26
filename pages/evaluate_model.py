@@ -15,6 +15,7 @@ from detectron2.data.datasets import register_coco_instances
 from detectron2.utils.logger import setup_logger
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+from detectron2 import model_zoo
 import cv2
 import os
 import random
@@ -238,7 +239,7 @@ class EvaluateModel(QtWidgets.QWidget):
         try:
 
             self.cfg = get_cfg()
-            self.cfg.merge_from_file(os.path.join(basedir, "detectron2Files", "mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
+            self.cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
             self.cfg.DATALOADER.NUM_WORKERS = 2
             self.cfg.MODEL.DEVICE = 'cpu'
             self.cfg.MODEL.WEIGHTS = self.model_path

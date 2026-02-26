@@ -14,6 +14,7 @@ from detectron2.data import MetadataCatalog, DatasetCatalog
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 import matplotlib.pyplot as plt
+from detectron2 import model_zoo
 import datetime
 import os
 import pandas as pd
@@ -308,8 +309,7 @@ class SegmentImages(QtWidgets.QWidget):
     def load_model(self):
 
         cfg = get_cfg()
-        cfg.merge_from_file(os.path.join(basedir, "detectron2Files", "mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
-        
+        cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
         cfg.MODEL.DEVICE = 'cpu'
         cfg.DATALOADER.NUM_WORKERS = 2
         cfg.SOLVER.IMS_PER_BATCH = 1  # This is the real "batch size" commonly known to deep learning people

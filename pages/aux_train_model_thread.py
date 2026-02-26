@@ -2,6 +2,7 @@ from PyQt6 import QtCore
 import os
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultTrainer
+from detectron2 import model_zoo
 
 # Get one directory before "pages" as the basedir
 basedir = os.path.split(os.path.dirname(__file__))[0]
@@ -10,7 +11,7 @@ class TrainModelThread(QtCore.QThread):
 
 
     def __init__(self, labelTrainingLog, dataset_train_name, dataset_test_name, spinBoxImgSize, spinBoxNumOfClasses, comboBoxDevice,
-                    spinBoxBatchSize, doubleSpinBoxLR, comboBoxModelWeights, spinBoxMaxIter, spinBoxROIBS):
+                    spinBoxBatchSize, doubleSpinBoxLR, spinBoxMaxIter, spinBoxROIBS):
        
         QtCore.QThread.__init__(self)
 
@@ -34,14 +35,14 @@ class TrainModelThread(QtCore.QThread):
 
         self.spinBoxROIBS = spinBoxROIBS
 
-        self.comboBoxModelWeights = comboBoxModelWeights
+        #self.comboBoxModelWeights = comboBoxModelWeights
 
     def run(self):
 
         try: 
 
             cfg = get_cfg()
-            cfg.merge_from_file(os.path.join(basedir, "detectron2Files", "mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
+            cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
             #cfg.merge_from_file("detectron2Files/mask_rcnn_X_101_32x8d_FPN_3x.yaml")
             cfg.DATASETS.TRAIN = (self.dataset_train_name,)
             if self.dataset_test_name != None:
@@ -58,7 +59,7 @@ class TrainModelThread(QtCore.QThread):
 
             cfg.MODEL.DEVICE = self.comboBoxDevice.currentText().lower()
             #cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(self.comboBoxModelWeights)  # Let training initialize from model zoo
-            cfg.MODEL.WEIGHTS = self.comboBoxModelWeights
+            #cfg.MODEL.WEIGHTS = self.comboBoxModelWeights
             #cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final_highres.pth")
             cfg.SOLVER.IMS_PER_BATCH = self.spinBoxBatchSize  # This is the real "batch size" commonly known to deep learning people
             cfg.SOLVER.BASE_LR = self.doubleSpinBoxLR  # pick a good LR

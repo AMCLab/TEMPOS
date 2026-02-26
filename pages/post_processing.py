@@ -12,6 +12,7 @@ from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as Navigation
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 import matplotlib.pyplot as plt
+from detectron2 import model_zoo
 import os
 import pandas as pd
 import ast
@@ -313,6 +314,9 @@ class PostProcessing(QtWidgets.QWidget):
         except: pass    
 
 
+    def show_error_message(self, message):
+
+        QtWidgets.QMessageBox.critical(self, "Error", message)
     # def select_directory(self):
 
     #     file_dialog = QtWidgets.QFileDialog(directory='./')
@@ -326,28 +330,33 @@ class PostProcessing(QtWidgets.QWidget):
     #         self.loadImage()
 
     def loadImage(self):
+
+        try:
             
-        # Get supported image formats
-        supported_formats = [fmt.data().decode().lower() for fmt in QtGui.QImageReader.supportedImageFormats()]
-        extensions = [f"*.{fmt}" for fmt in supported_formats]
-        
-        # Find all image files in directory
-        self.image_files = []
-        for ext in extensions:
-            self.image_files.extend(sorted(
-                [os.path.join(self.directory, f) for f in os.listdir(self.directory) if f.lower().endswith(ext[1:])],
-                key=str.lower
-            ))
-        
-        if self.image_files:
-            self.current_index = 0
-            self.update_buttons()
-            _, _, annotated_image = self.get_current_anno(self.image_files, self.current_index, self.annotations_df)
-            self.show_current_image(annotated_image)  
-        else:
-            #self.labelPlotImage.setText("No images found in selected directory")
-            self.pushButtonPrevious.setEnabled(False)
-            self.pushButtonNext.setEnabled(False)
+            # Get supported image formats
+            supported_formats = [fmt.data().decode().lower() for fmt in QtGui.QImageReader.supportedImageFormats()]
+            extensions = [f"*.{fmt}" for fmt in supported_formats]
+            
+            # Find all image files in directory
+            self.image_files = []
+            for ext in extensions:
+                self.image_files.extend(sorted(
+                    [os.path.join(self.directory, f) for f in os.listdir(self.directory) if f.lower().endswith(ext[1:])],
+                    key=str.lower
+                ))
+            
+            if self.image_files:
+                self.current_index = 0
+                self.update_buttons()
+                _, _, annotated_image = self.get_current_anno(self.image_files, self.current_index, self.annotations_df)
+                self.show_current_image(annotated_image)  
+            else:
+                #self.labelPlotImage.setText("No images found in selected directory")
+                self.pushButtonPrevious.setEnabled(False)
+                self.pushButtonNext.setEnabled(False)
+
+        except Exception as e:
+            self.show_error_message(f"Error loading images:\n\n{str(e)}")
 
     def get_current_anno(self, image_files, current_index, annotations_df):
 
@@ -452,8 +461,7 @@ class PostProcessing(QtWidgets.QWidget):
     def load_model(self):
 
         cfg = get_cfg()
-        cfg.merge_from_file(os.path.join(basedir, "detectron2Files", "mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
-        
+        cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
         cfg.MODEL.DEVICE = 'cpu'
         cfg.DATALOADER.NUM_WORKERS = 2
         cfg.SOLVER.IMS_PER_BATCH = 1  # This is the real "batch size" commonly known to deep learning people
@@ -631,115 +639,141 @@ class PostProcessing(QtWidgets.QWidget):
         return True
 
     def segment_and_show_tile(self):
+
+        try:
+            if not hasattr(self, "image") or self.image is None:
+                self.show_error_message("No image loaded. Please select a CSV file first.")
+                return
+
+            if not hasattr(self, "predictor") or self.predictor is None:
+                self.show_error_message("No model loaded. Please select a model first.")
+                return
             
-        _, processed_image = self.segment_sliding_window(self.image, self.predictor, self.nm_to_px)
+            _, processed_image = self.segment_sliding_window(self.image, self.predictor, self.nm_to_px)
         
-        self.show_current_image(processed_image)
+            self.show_current_image(processed_image)
+
+        except Exception as e:
+
+            self.show_error_message(f"An error occurred during segmentation:\n\n{str(e)}")
 
     def segment_sliding_window(self, image, predictor, nm_to_px):
 
-        self.image = image
+        try:
+            if image is None:
+                self.show_error_message("No image available for segmentation.")
+                return [], None
 
-        self.nm_to_px = nm_to_px
+            if predictor is None:
+                self.show_error_message("Model is not loaded.")
+                return [], None
 
-        #self.predictor = self.load_model()
+            self.image = image
 
-        division_tile = self.SpinBoxDivisionTile.value()
+            self.nm_to_px = nm_to_px
 
-        division_stride = self.SpinBoxDivisionStride.value()
+            #self.predictor = self.load_model()
 
-        window_size = (self.image.shape[0]//division_tile, self.image.shape[1]//division_tile)  # Height, Width
- 
-        stride = window_size[0]//division_stride  # Overlap = window_size - stride
+            division_tile = self.SpinBoxDivisionTile.value()
 
+            division_stride = self.SpinBoxDivisionStride.value()
 
-        # Generate sliding windows
-        windows = self.sliding_window(self.image, window_size, stride)
-
-        # Process each window (replace with your processing)
-        processed_windows = []
-        self.all_contours = []
-        existing_bboxes = []
-
-        for (coords, window) in windows:
-
-            # Get predictions from model    
-            outputs = predictor(window)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
-
-            predictions = outputs["instances"].to("cpu")
-
-            # boxes = predictions.pred_boxes if predictions.has("pred_boxes") else None
-       
-            # masks = predictions.pred_masks if predictions.has("pred_masks") else None
-
-            processed_window = window.copy()
-
-            if len(predictions) > 0:
-
-                for i in range(len(predictions)):
-                        
-                    # Get mask detection
-                    mask = predictions.pred_masks[i]
-                    # Find mask contour using skimage find_contours
-                    contours, _ = Utils().get_mask_contours(mask)
-
-                    if contours != []:
-                        # If more than one contour found in mask, get the longest
-                        list_len = [len(i) for i in contours]
-                        longest_index = np.argmax(np.array(list_len))
-                        # Sometimes two polygons are found in the same detection, we want to take the last - which is the biggest
-                        paired_contours = list(zip(contours[longest_index][::2], contours[longest_index][1::2]))
+            window_size = (self.image.shape[0]//division_tile, self.image.shape[1]//division_tile)  # Height, Width
     
-                        # The contours will have the coordinates for the window. We want to translate for the full image
-                        translated_contours = [(x + coords[2], y + coords[0]) for x, y in zip(contours[longest_index][::2], contours[longest_index][1::2])]
+            stride = window_size[0]//division_stride  # Overlap = window_size - stride
 
-                        # Calculate bounding box
-                        min_x = min(p[0] for p in translated_contours)
-                        min_y = min(p[1] for p in translated_contours)
-                        max_x = max(p[0] for p in translated_contours)
-                        max_y = max(p[1] for p in translated_contours)
-                        new_bbox = (min_x, min_y, max_x, max_y)
 
-                        # Check for duplicates using IoU
-                        is_duplicate = False
-                        for existing_bbox in existing_bboxes:
+            # Generate sliding windows
+            windows = self.sliding_window(self.image, window_size, stride)
 
-                            if self.compute_iou(new_bbox, existing_bbox) > 0.9:
-                                is_duplicate = True
-                                break
+            # Process each window (replace with your processing)
+            processed_windows = []
+            self.all_contours = []
+            existing_bboxes = []
+
+            for (coords, window) in windows:
+
+                # Get predictions from model    
+                outputs = predictor(window)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
+
+                predictions = outputs["instances"].to("cpu")
+
+                # boxes = predictions.pred_boxes if predictions.has("pred_boxes") else None
+        
+                # masks = predictions.pred_masks if predictions.has("pred_masks") else None
+
+                processed_window = window.copy()
+
+                if len(predictions) > 0:
+
+                    for i in range(len(predictions)):
+                            
+                        # Get mask detection
+                        mask = predictions.pred_masks[i]
+                        # Find mask contour using skimage find_contours
+                        contours, _ = Utils().get_mask_contours(mask)
+
+                        if contours != []:
+                            # If more than one contour found in mask, get the longest
+                            list_len = [len(i) for i in contours]
+                            longest_index = np.argmax(np.array(list_len))
+                            # Sometimes two polygons are found in the same detection, we want to take the last - which is the biggest
+                            paired_contours = list(zip(contours[longest_index][::2], contours[longest_index][1::2]))
+        
+                            # The contours will have the coordinates for the window. We want to translate for the full image
+                            translated_contours = [(x + coords[2], y + coords[0]) for x, y in zip(contours[longest_index][::2], contours[longest_index][1::2])]
+
+                            # Calculate bounding box
+                            min_x = min(p[0] for p in translated_contours)
+                            min_y = min(p[1] for p in translated_contours)
+                            max_x = max(p[0] for p in translated_contours)
+                            max_y = max(p[1] for p in translated_contours)
+                            new_bbox = (min_x, min_y, max_x, max_y)
+
+                            # Check for duplicates using IoU
+                            is_duplicate = False
+                            for existing_bbox in existing_bboxes:
+
+                                if self.compute_iou(new_bbox, existing_bbox) > 0.9:
+                                    is_duplicate = True
+                                    break
+                            
+                            # Extract masked pixels from original image
+                            masked_pixels = window[mask]
+                            # Remove region containing white pixels - its the ruler
+                            is_white = np.any(np.all(masked_pixels == 255, axis=1))
+                            # Remove region containing black pixels - its the ruler
+                            is_black = np.any(np.all(masked_pixels == 0, axis=1))
+                            
+                            # Filter contours that do not touch the border
+                            if not self.is_overlapping_border(translated_contours, coords) and not is_duplicate and not (is_black or is_white):
+
+                                self.all_contours.append(translated_contours)
+                                existing_bboxes.append(new_bbox)
+                                # Make sure the contours list is not empty              
+                                if paired_contours != []:
+
+                                    # Convert polygon coordinates to a NumPy array
+                                    points = np.array(paired_contours)
+
+                                    x = points[:, 0]  # Extract x-coordinates
+                                    y = points[:, 1]  # Extract y-coordinates
+                                    draw_polygon = np.column_stack((x, y)).astype(np.int32)   
+
+                                    
+                                    # Draw the bumpy circle contour, bgr format
+                                    processed_window = cv2.polylines(processed_window, [draw_polygon], isClosed=True, color=(255, 0, 0), thickness=5)
                         
-                        # Extract masked pixels from original image
-                        masked_pixels = window[mask]
-                        # Remove region containing white pixels - its the ruler
-                        is_white = np.any(np.all(masked_pixels == 255, axis=1))
-                        # Remove region containing black pixels - its the ruler
-                        is_black = np.any(np.all(masked_pixels == 0, axis=1))
-                        
-                        # Filter contours that do not touch the border
-                        if not self.is_overlapping_border(translated_contours, coords) and not is_duplicate and not (is_black or is_white):
+                processed_windows.append((coords, processed_window))
 
-                            self.all_contours.append(translated_contours)
-                            existing_bboxes.append(new_bbox)
-                            # Make sure the contours list is not empty              
-                            if paired_contours != []:
+            # Stitch the tiles back together
+            self.reconstructed = self.reconstruct_image(processed_windows, self.image.shape)
 
-                                # Convert polygon coordinates to a NumPy array
-                                points = np.array(paired_contours)
-
-                                x = points[:, 0]  # Extract x-coordinates
-                                y = points[:, 1]  # Extract y-coordinates
-                                draw_polygon = np.column_stack((x, y)).astype(np.int32)   
-
-                                
-                                # Draw the bumpy circle contour, bgr format
-                                processed_window = cv2.polylines(processed_window, [draw_polygon], isClosed=True, color=(255, 0, 0), thickness=5)
-                    
-            processed_windows.append((coords, processed_window))
-
-        # Stitch the tiles back together
-        self.reconstructed = self.reconstruct_image(processed_windows, self.image.shape)
-
-        return self.all_contours, self.reconstructed
+            return self.all_contours, self.reconstructed
+        
+        except Exception as e:
+            self.show_error_message(f"Error during sliding window processing:\n\n{str(e)}")
+            return [], None
         # self.canvas.setVisible(True)
         # # Clear the previous plot
         # self.ax.clear()
@@ -752,9 +786,17 @@ class PostProcessing(QtWidgets.QWidget):
 
     def update_results_button(self):
 
-        _ = self.update_results_csv(self.image_files, self.model_path, self.current_index, self.all_contours, self.annotations_df, self.csv_file, self.reconstructed, self.nm_to_px, self.directory)
+        try:
+            if not hasattr(self, "all_contours") or not hasattr(self, "reconstructed"):
+                self.show_error_message("No segmentation results available.")
+                return
 
-        self.update_csv(self.annotations_df, self.csv_file)
+            _ = self.update_results_csv(self.image_files, self.model_path, self.current_index, self.all_contours, self.annotations_df, self.csv_file, self.reconstructed, self.nm_to_px, self.directory)
+
+            self.update_csv(self.annotations_df, self.csv_file)
+
+        except Exception as e:
+            self.show_error_message(f"Error updating results:\n\n{str(e)}")
 
     def update_results_csv(self, image_files, model_path, current_index, all_contours, annotations_df, csv_file, reconstructed, nm_to_px, directory):
 
@@ -841,6 +883,11 @@ class PostProcessing(QtWidgets.QWidget):
         print('Save anno for file')
 
     def select_multiple_files(self):
+
+        if not hasattr(self, "predictor") or self.predictor is None:
+            self.show_error_message("Please load a model first.")
+            return
+        
         # Open file dialog for multiple selection
         file_dialog, _ = QtWidgets.QFileDialog.getOpenFileNames(
             self,
