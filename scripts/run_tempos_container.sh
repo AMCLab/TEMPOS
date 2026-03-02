@@ -35,7 +35,7 @@ docker run -it --rm \
     -e DISPLAY="$DISPLAY" \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v "$(pwd)/exports:/app/exports" \
-    ghcr.io/AMCLab/tempos:latest
+    ghcr.io/amclab/tempos:latest
 
 # Clean up X11 permissions after container exits.
 xhost -local:docker > /dev/null
