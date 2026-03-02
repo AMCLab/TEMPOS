@@ -1,0 +1,53 @@
+# --- Version Control ---
+.git
+.gitignore
+.gitattributes
+
+# --- Local Data & Persistence ---
+# Prevents local test exports from being baked into the cloud image
+exports/
+logs/
+*.log
+
+# --- Python stuff ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.toast
+.buildpath
+
+# --- Build Artifacts ---
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- IDEs & OS Files ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Docker & CI ---
+Dockerfile
+scripts/run_tempos_container_linux.sh
+.dockerignore
+.github/

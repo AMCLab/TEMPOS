@@ -98,5 +98,72 @@ pip install -r requirements.txt
 
 ```
 
+# Running as a Docker Container
 
-  
+A containerised version of TEMPOS is available, allowing you to run the GUI without manually installing PyTorch, Detectron2, CUDA, or other dependencies.
+
+**Requirements:**
+* Docker (or Docker Desktop on Windows / macOS)
+* Display Server:
+  - Linux: native X11.
+  - Windows: WSLg (standard in Windows 11) or an X-Server like VcXsrv.
+
+### Quick Start
+
+Pull the image from the GitHub Container Registry:
+```bash
+docker pull ghcr.io/amclab/tempos:latest
+```
+
+Run the helper script from the root of the repository:
+```bash
+bash scripts/run_tempos_container.sh
+```
+
+> **IMPORTANT:** To ensure your work isn't lost when the container closes, always save exported files (models, segmentation results, databases) to the `exports/` directory. This folder is automatically mapped to your local machine.
+---
+
+### What the Script Does
+
+The script automatically:
+1. Verifies `$DISPLAY` is set (required for GUI forwarding)
+2. Creates a local `exports/` directory for persistent output
+3. Grants Docker temporary access to your X11 server
+4. Runs the container with:
+   - `--network host` - enables local services such as Uvicorn
+   - `--shm-size=2gb` - prevents PyTorch shared memory crashes
+   - X11 forwarding and the `exports/` volume mount enabled
+5. Revokes X11 permissions once the container exits
+
+---
+
+### GPU Support (Optional)
+
+To enable GPU acceleration, add `--gpus all` to the `docker run` command inside the script.
+
+**Prerequisites:**
+- NVIDIA drivers installed on the host
+- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) configured
+
+If your host lacks a compatible GPU, the container will default to CPU-only mode.
+
+---
+
+### Manual Execution (Advanced)
+
+If you prefer not to use the helper script, you can launch the container manually.
+
+```bash
+mkdir -p exports
+xhost +local:docker
+
+docker run -it --rm \
+    --network host \
+    --shm-size=2gb \
+    -e DISPLAY="$DISPLAY" \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v "$(pwd)/exports:/app/exports" \
+    ghcr.io/amclab/tempos:latest
+
+xhost -local:docker
+```
