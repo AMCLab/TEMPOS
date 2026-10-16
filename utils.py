@@ -160,7 +160,7 @@ class Utils:
         # solidity and convexity are defined as the ratio of the areas and perimeters, 
         # respectively, between the particle and the smallest convex polygon that encapsulates the particle.
         final_df['solidity'] = (all_masks_df['area']/all_masks_convex_hull_df['area'])
-        final_df['convexity'] = (all_masks_df['perimeter']/all_masks_convex_hull_df['perimeter'])
+        final_df['convexity'] = (all_masks_convex_hull_df['perimeter']/all_masks_df['perimeter'])
         
         return final_df
 
@@ -210,7 +210,11 @@ class Utils:
         props_convex_hull = regionprops_table(label_convex_hull, properties=('area','perimeter'),)
         # Sometimes if get a very small area by mistake and returns two regions. We need to filter just the first one
         props_convex_hull = {key: np.array([val[0]]) for key, val in props_convex_hull.items()}
-        
+
+        # Tranform the properties to nm using the conversion factor
+        props_convex_hull['area'] = props_convex_hull['area']/(nm_to_px)**2
+        props_convex_hull['perimeter'] = props_convex_hull['perimeter']/nm_to_px
+
         # Convert to DataFrame and add a column for the detection index (optional)
         df = pd.DataFrame(props)
 
