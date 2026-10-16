@@ -415,140 +415,227 @@ class SegmentImages(QtWidgets.QWidget):
 
     def plot_segmentation_results(self):
 
-        #self.load_model()
-
         image, nm_to_px = Utils().read_image(self.file_path)
 
-        # Get predictions from model    
-        outputs = self.predictor(image)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
+        outputs = self.predictor(image)
+
         predictions = outputs["instances"].to("cpu")
-        
-        boxes = predictions.pred_boxes if predictions.has("pred_boxes") else None
-        scores = predictions.scores if predictions.has("scores") else None
-        classes = predictions.pred_classes.tolist() if predictions.has("pred_classes") else None
-      
-        masks = predictions.pred_masks if predictions.has("pred_masks") else None
 
-        if len(boxes) == 0:
+        # If no detections were found
+        if len(predictions) == 0:
+
             img = image.copy()
-            self.labelPlotStats.setText("No detections found!")
-            
-        else:
- 
-            diameters=[]
 
-            # Plot contour using COCO Visualisation method
+            self.labelPlotStats.setText("No detections found!")
+
+        else:
+
+            diameters = []
+
+            # These will contain only valid particles
+            all_masks = []
+            all_masks_convex_hull = []
+            # Store indices of detections that pass the filters
+            keep_indices = []
+            # Store diameter endpoints for later visualization
+            diameter_points = []
+
+            # Get masks
+            masks = (predictions.pred_masks if predictions.has("pred_masks") else None)
+
+            for i in range(len(predictions)):
+
+                mask = np.asarray(masks[i])
+
+                contours, _ = Utils().get_mask_contours(mask)
+
+                # Make sure contours were found
+                if contours != []:
+
+                    # If more than one contour was found, use the longest
+                    list_len = [len(c) for c in contours]
+
+                    longest_index = np.argmax(np.array(list_len))
+
+                    paired_list = list(zip(contours[longest_index][::2], contours[longest_index][1::2]))
+
+                    contours = [list(pair) for pair in paired_list]
+
+                    # Image boundaries (y_start, y_end, x_start, x_end)
+                    coords = (0, image.shape[0], 0, image.shape[1])
+
+                    # Extract pixels belonging to this detection
+                    masked_pixels = image[mask]
+
+                    # Check for white pixels White region = scale bar
+                    is_white = np.any(np.all(masked_pixels == 255, axis=1))
+
+                    # Check for black pixels Black region = scale bar
+                    is_black = np.any(np.all(masked_pixels == 0, axis=1))
+
+                    # Keep only particles that: Don't overlap image borders
+                    # Don't contain white pixels
+                    # Don't contain black pixels
+
+                    overlaps_border = self.is_overlapping_border(contours, coords)
+
+                    is_scale_bar = is_black or is_white
+
+                    if not overlaps_border and not is_scale_bar:
+
+                        keep_indices.append(i) # Valid detection
+
+                        # Calculate diameter
+                        point1, point2, diameter = Utils().find_diameter(np.array(contours))
+
+                        # Convert diameter from pixels to nm
+                        diameter_nm = diameter / nm_to_px
+
+                        diameters.append(diameter_nm)
+
+                        # Store points for later visualization
+                        diameter_points.append((point1, point2))
+
+                        # Create empty mask for particle properties
+                        particle_mask = np.zeros_like(image)
+
+                        (all_masks, all_masks_convex_hull) = Utils().get_particle_properties(
+                                                                particle_mask,
+                                                                contours,
+                                                                all_masks,
+                                                                all_masks_convex_hull,
+                                                                nm_to_px
+                                                            )
+
+            # CREATE FILTERED DETECTRON2 INSTANCES
+            if len(keep_indices) > 0:
+                filtered_predictions = predictions[keep_indices]
+            else:
+                # Empty Instances object
+                filtered_predictions = predictions[:0]
+
             if self.checkBoxShowInstances.isChecked():
 
-                # Register dataset in COCO format
                 try:
+
                     dataset_dicts = DatasetCatalog.get("my_dataset_" + str(self.count))
+
                     nuts_metadata = MetadataCatalog.get("my_dataset_" + str(self.count))
+
                 except:
 
                     dlg = QtWidgets.QMessageBox(self)
+
                     dlg.setWindowTitle("Warning!")
-                    dlg.setText("<font color = '#335674'>No json file selected. The segmentation\
-                                will display the predicted classes ids,\
-                                but they won't be mapped to their names.</font color = '#335674'>")
-                    button = dlg.exec()
+
+                    dlg.setText(
+                        "<font color='#335674'>"
+                        "No json file selected. The segmentation "
+                        "will display the predicted classes ids, "
+                        "but they won't be mapped to their names."
+                        "</font>"
+                    )
+
+                    dlg.exec()
+
                     nuts_metadata = None
-                
-                v = Visualizer(image[:, :, ::-1],
+
+                # Create Detectron2 Visualizer
+                v = Visualizer(
+                    image[:, :, ::-1],
                     metadata=nuts_metadata,
                     scale=1,
-                    instance_mode=ColorMode.IMAGE_BW)
-                
-                out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
-                
+                    instance_mode=ColorMode.IMAGE_BW
+                )
+
+                # Visualize ONLY the filtered predictions
+                out = v.draw_instance_predictions(filtered_predictions)
+
+                # Convert RGB → BGR
                 img = out.get_image()[:, :, ::-1]
 
-            # Empty list to add particle's properties
-            all_masks = []
-            all_masks_convex_hull = []
+            else:
 
-            for i in range(len(boxes)):
-                
-                # Get mask detection
-                mask = np.asarray(masks[i])
-                # Find mask contour using skimage find_contours
-                contours, _  = Utils().get_mask_contours(mask)
-
-                # Make sure the contours list is not empty              
-                if contours != []:
-                    # If more than one contour found in mask, get the longest
-                    list_len = [len(i) for i in contours]
-                    longest_index = np.argmax(np.array(list_len))
-                    # Sometimes two polygons are found in the same detection, we want to take the last - which is the biggest
-                    paired_list = list(zip(contours[longest_index][::2], contours[longest_index][1::2]))
-                    # Convert tuples to lists (optional)
-                    contours = [list(pair) for pair in paired_list]
-                    # Find diamenter
-                    point1, point2, diameter = Utils().find_diameter(np.array(contours))
-                    # Convert to nm
-                    diameter_nm = round(diameter/nm_to_px , 2)
-                    # Add to list 
-                    diameters.append(diameter_nm)
-
-                    # Create an empty canvas to plot the contours. This will assure that the calculations are doing done 
-                    # with the same polygon drawn
-                    mask = np.zeros_like(image) 
-
-                    all_masks, all_masks_convex_hull = Utils().get_particle_properties(mask, contours, all_masks, all_masks_convex_hull, nm_to_px)
-
-                    # Plot diameter on top of segmentation results
-                    if self.checkBoxShowInstances.isChecked():
-                        
-                        image = img.copy()
-                    
-                    if self.checkBoxShowDiameter.isChecked():
-                        # Plot diameter
-                        img = cv2.line(image, (int(point1[0]), int(point1[1])), (int(point2[0]), int(point2[1])), (255, 0, 0), 2) 
-
-            if (self.checkBoxShowInstances.isChecked() == False and self.checkBoxShowDiameter.isChecked() == False):
-                
+                # No Detectron2 visualization
                 img = image.copy()
 
-            # PLOT STATS
+            # DRAW DIAMETERS
+            if self.checkBoxShowDiameter.isChecked():
+
+                for point1, point2 in diameter_points:
+
+                    img = cv2.line(img, (int(point1[0]), int(point1[1])),
+                        (int(point2[0]), int(point2[1])),(255, 0, 0),2)
+
+            if (not self.checkBoxShowInstances.isChecked() and not self.checkBoxShowDiameter.isChecked()):
+
+                img = image.copy()
+
             final_df = Utils().get_particle_properties_final_df(all_masks, all_masks_convex_hull)
 
-            # Drop entries where major or minor axis are 0 
-            # final_df = final_df[final_df.axis_major_length != 0]
-            # final_df = final_df[final_df.axis_minor_length != 0]  
-            
+            # Create statistics figure
+         
             self.figure2 = plt.figure(facecolor='#F0F0F0')
-            plt.rc('font', size=8)
-            try:
-                #create histogram for each column in DataFrame
-                for i, feature in enumerate(final_df.columns[final_df.columns != 'contours']):
-                    
-                    axes2=self.figure2.add_subplot(2, 4, i+1)
-                    axes2.ticklabel_format(style='sci', axis='x', scilimits=(-3,3), useMathText=True)  
-                    final_df[feature].hist(ax=axes2, grid=False, color='#335674')
-                    axes2.set_title(str(feature).replace('_', ' ').capitalize(), color='black')
-            
-            except: pass        
-            
-            mu = np.round(np.array(diameters).mean(), 2)
-            number_of_detections = len(diameters)
-            sigma = np.round(np.array(diameters).std(), 2)
 
-            self.figure2.suptitle(str(number_of_detections) + ' Particles Detected with Mean Diameter = ' + str(mu) + ' and std = ' + str(sigma), fontsize=10)
+            plt.rc('font', size=8)
+
+            try:
+                # Create histogram for each column
+                # except contours
+
+                for i, feature in enumerate(final_df.columns[final_df.columns != 'contours']):
+
+                    axes2 = self.figure2.add_subplot(2, 4, i + 1)
+
+                    axes2.ticklabel_format(style='sci', axis='x', scilimits=(-3, 3), useMathText=True)
+
+                    final_df[feature].hist(ax=axes2, grid=False, color='#335674')
+
+                    axes2.set_title(str(feature).replace('_', ' ').capitalize(),color='black')
+
+            except Exception as e:
+
+                print("Could not create statistics plots:", e)
+
+            # CALCULATE DIAMETER STATISTICS
+            if len(diameters) > 0:
+
+                mu = np.round(np.array(diameters).mean(), 2)
+                sigma = np.round(np.array(diameters).std(), 2)
+
+            else:
+
+                mu = 0
+                sigma = 0
+
+            number_of_detections = len(diameters)
+
+            self.figure2.suptitle(str(number_of_detections)+ ' Particles Detected with Mean Diameter = '
+                + str(mu)
+                + ' and std = '
+                + str(sigma),
+                fontsize=10
+            )
 
             self.figure2.tight_layout()
 
+            # DISPLAY STATISTICS
             self.create_canvas(self.figure2, self.labelPlotStats)
-        
-        # PLOT PRED
+
+        # PLOT PREDICTIONS
         self.figure = Figure(facecolor='#F0F0F0')
-      
+
         axes = self.figure.gca()
 
-        if self.checkBoxShowAxis.isChecked() == False:
+        # Hide axes if requested
+        if not self.checkBoxShowAxis.isChecked():
+
             axes.axis("off")
 
+        # Display final image
         axes.imshow(img, cmap='gray')
-        
+
+        # Display in Qt widget
         self.create_canvas(self.figure, self.labelPlotPred)
 
     def export_plot(self, figure):
@@ -684,7 +771,7 @@ class SegmentImages(QtWidgets.QWidget):
                 # classes = predictions.pred_classes.tolist() if predictions.has("pred_classes") else None
             
                 #masks = predictions.pred_masks if predictions.has("pred_masks") else None
-
+                final_number_of_detections = 0
                 if len(predictions) == 0:
 
                     img = image.copy()
@@ -700,6 +787,8 @@ class SegmentImages(QtWidgets.QWidget):
                     final_df['nm2pixels'] = 0
 
                     final_df['PredictionModel'] = self.model_path
+
+                    final_df['Number of Detections'] = final_number_of_detections
 
                     dir_df = pd.concat([dir_df, final_df]) 
 
@@ -744,7 +833,7 @@ class SegmentImages(QtWidgets.QWidget):
                             contours = [list(pair) for pair in paired_list]
 
                             # Boundaries of the image (y_start, y_end, x_start, x_end)
-                            coords = (0, image.shape[1], 0, image.shape[0])
+                            coords = (0, image.shape[0], 0, image.shape[1])
 
                             # Extract masked pixels from original image
                             masked_pixels = image[mask]
@@ -753,13 +842,13 @@ class SegmentImages(QtWidgets.QWidget):
                             # Remove region containing black pixels - its the ruler
                             is_black = np.any(np.all(masked_pixels == 0, axis=1))
 
-                                        # Remove detections in the boundaries do we don't have "half particles"
+                            # Remove detections in the boundaries so we don't have "half particles"
                             if not self.is_overlapping_border(contours, coords) and not (is_black or is_white):
-                                
+                                final_number_of_detections += 1
                                 # Find diamenter
                                 point1, point2, diameter = Utils().find_diameter(np.array(contours))
                                 # Convert to nm
-                                diameter_nm = round(diameter/nm_to_px , 2)
+                                diameter_nm =diameter/nm_to_px
                                 # Add to list 
                                 diameters.append(diameter_nm)
 
@@ -846,7 +935,7 @@ class SegmentImages(QtWidgets.QWidget):
 
                     df_mean_results_image['PredictionModel'] = self.model_path
 
-                    df_mean_results_image['Number of Detections'] = len(predictions)
+                    df_mean_results_image['Number of Detections'] = len(final_number_of_detections)
 
                     if image_name.endswith(('.dm3', '.dm4')):
                         

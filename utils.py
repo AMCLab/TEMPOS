@@ -348,9 +348,11 @@ class Utils:
             'am': 1, # it reads wrong sometimes
             'nanometer': 1,
             'μm': 1000,
+            'µm': 1000,  # Alternative spelling
             'um': 1000,  # Alternative spelling
             'micron': 1000,
             'micrometer': 1000,
+            'µ': 1000,  # Handle single-character mu symbol
             'µ': 1000  # Handle single-character mu symbol
         }
         

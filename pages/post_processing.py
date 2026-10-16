@@ -843,7 +843,7 @@ class PostProcessing(QtWidgets.QWidget):
 
             point1, point2, diameter = Utils().find_diameter(np.array(contour))
             # Convert to nm
-            diameter_nm = round(diameter/self.nm_to_px , 2)
+            diameter_nm = diameter/self.nm_to_px 
             # Add to list 
             diameters.append(diameter_nm)
 
